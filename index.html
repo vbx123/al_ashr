@@ -3,148 +3,327 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لعبة إكس أو المتطورة</title>
+    <title>X O PRO - تحدي العمالقة</title>
     <style>
+        /* تعريف الألوان والمتغيرات */
         :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #f39c12;
-            --bg-color: #2c3e50;
-            --text-color: #ecf0f1;
+            --bg-body: #1a1a2e;
+            --bg-panel: #16213e;
+            --color-x: #ff4757; /* أحمر نيون */
+            --color-o: #2ed573; /* أخضر فسفوري */
+            --text-main: #ffffff;
+            --accent: #f39c12;
+            --shadow-x: 0 0 15px rgba(255, 71, 87, 0.7);
+            --shadow-o: 0 0 15px rgba(46, 213, 115, 0.7);
+            --board-size: 600px; /* حجم اللوحة الكبير */
+            --cell-size: 190px;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
-            padding: 20px;
+            overflow-x: hidden;
         }
 
-        .setup-container, .game-container {
-            background: #34495e;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        h1.main-title {
+            font-size: 4rem;
+            margin: 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: var(--text-main);
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+
+        /* شاشة الإعدادات */
+        .setup-container {
+            background: var(--bg-panel);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.7);
             text-align: center;
-            max-width: 400px;
+            width: 500px;
+            margin-top: 50px;
+        }
+
+        .setup-container h3 { font-size: 2.5rem; margin-bottom: 30px; }
+
+        .input-group { margin-bottom: 25px; text-align: right; }
+        .input-group label { display: block; font-size: 1.2rem; margin-bottom: 8px; color: #bdc3c7; }
+
+        input[type="text"] {
             width: 100%;
-        }
-
-        .hidden { display: none; }
-
-        input {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: none;
-            width: 80%;
-        }
-
-        button {
-            padding: 10px 20px;
-            background-color: var(--primary-color);
+            padding: 15px;
+            font-size: 1.3rem;
+            border-radius: 10px;
+            border: 2px solid #34495e;
+            background: rgba(0,0,0,0.2);
             color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
+            box-sizing: border-box;
         }
 
-        button:hover { background-color: #357abd; }
+        select {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.3rem;
+            border-radius: 10px;
+            background: rgba(0,0,0,0.2);
+            color: white;
+            border: 2px solid #34495e;
+            cursor: pointer;
+        }
 
+        /* شاشة اللعبة */
+        .game-container {
+            display: none; /* مخفية في البداية */
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* لوحة النتيجة الاحترافية */
         .scoreboard {
             display: flex;
             justify-content: space-around;
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-            background: #2c3e50;
-            padding: 10px;
+            width: 100%;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .player-card {
+            background: var(--bg-panel);
+            padding: 20px 40px;
+            border-radius: 15px;
+            text-align: center;
+            flex: 1;
+            transition: all 0.5s ease;
+            border: 3px solid transparent;
+            position: relative;
+        }
+
+        .player-card.p1-turn { border-color: var(--color-x); box-shadow: var(--shadow-x); }
+        .player-card.p2-turn { border-color: var(--color-o); box-shadow: var(--shadow-o); }
+
+        /* ستايل المتصدر (اللون المتغلب) */
+        .player-card.leader {
+            transform: scale(1.1);
+            background: #1f2d50;
+            border-color: var(--accent);
+            box-shadow: 0 0 30px rgba(243, 156, 18, 0.5);
+        }
+        .player-card.leader::after {
+            content: '👑 المتصدر';
+            position: absolute;
+            top: -15px;
+            right: 10px;
+            background: var(--accent);
+            color: black;
+            padding: 2px 10px;
             border-radius: 10px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .p1-name-display { color: var(--color-x); font-size: 2rem; font-weight: bold; }
+        .p2-name-display { color: var(--color-o); font-size: 2rem; font-weight: bold; }
+
+        .score-number {
+            font-size: 5rem;
+            font-weight: 900;
+            margin: 10px 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .status-bar {
+            background: rgba(255,255,255,0.1);
+            width: 100%;
+            text-align: center;
+            padding: 15px;
+            font-size: 1.8rem;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* لوحة اللعب الضخمة */
+        .board-wrapper {
+            position: relative;
+            width: var(--board-size);
+            height: var(--board-size);
         }
 
         .board {
             display: grid;
-            grid-template-columns: repeat(3, 100px);
-            grid-gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 15px;
+            width: 100%;
+            height: 100%;
         }
 
         .cell {
-            width: 100px;
-            height: 100px;
-            background-color: #ecf0f1;
+            background-color: var(--bg-panel);
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-size: 8rem; /* حجم الرموز ضخم */
             font-weight: bold;
-            color: #2c3e50;
             cursor: pointer;
-            border-radius: 10px;
-            transition: 0.2s;
+            transition: background 0.3s, transform 0.1s;
+            user-select: none;
+            position: relative;
         }
 
-        .cell:hover { background-color: #bdc3c7; }
+        .cell:hover:not(.taken) {
+            background-color: #1f2d50;
+            transform: scale(1.02);
+        }
+
         .cell.taken { cursor: not-allowed; }
 
-        .status { margin-top: 20px; font-size: 1.1rem; height: 1.5rem; }
-        
-        .winner-msg { color: var(--secondary-color); font-weight: bold; }
+        /* ألوان الرموز وتأثيراتها */
+        .cell.x-filled {
+            color: var(--color-x);
+            text-shadow: var(--shadow-x);
+            animation: appear 0.3s ease-out;
+        }
+
+        .cell.o-filled {
+            color: var(--color-o);
+            text-shadow: var(--shadow-o);
+            animation: appear 0.3s ease-out;
+        }
+
+        @keyframes appear {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* خط الفوز */
+        #winning-line {
+            position: absolute;
+            background-color: var(--accent);
+            border-radius: 10px;
+            transition: all 0.5s ease;
+            z-index: 10;
+            display: none; /* مخفي */
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        /* الأزرار */
+        .controls { margin-top: 40px; display: flex; gap: 20px; }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn-primary { background-color: var(--accent); color: #000; }
+        .btn-primary:hover { background-color: #e67e22; transform: translateY(-3px); }
+
+        .btn-reset { background-color: #e74c3c; color: white; }
+        .btn-reset:hover { background-color: #c0392b; transform: translateY(-3px); }
+
+        .hidden { display: none !important; }
+
     </style>
 </head>
 <body>
 
-    <h1>لعبة Tic-Tac-Toe 🎮</h1>
+    <h1 class="main-title">X O PRO</h1>
 
-    <div id="setup" class="setup-container">
-        <h3>إعداد اللاعبين</h3>
-        <input type="text" id="p1Name" placeholder="اسم اللاعب الأول">
-        <select id="p1Symbol" style="padding: 10px; border-radius: 5px;">
-            <option value="X">يختار X</option>
-            <option value="O">يختار O</option>
-        </select>
-        <br>
-        <input type="text" id="p2Name" placeholder="اسم اللاعب الثاني">
-        <p style="font-size: 0.8rem;">(اللاعب الثاني سيأخذ الرمز المتبقي تلقائياً)</p>
-        <button onclick="startGame()">ابدأ اللعب</button>
+    <div id="setup-screen" class="setup-container">
+        <h3>إعداد العمالقة</h3>
+        
+        <div class="input-group">
+            <label>اللاعب الأول (اللون الأحمر)</label>
+            <input type="text" id="p1Name" placeholder="أدخل الاسم" maxlength="12">
+        </div>
+
+        <div class="input-group">
+            <label>يختار الرمز</label>
+            <select id="p1Symbol">
+                <option value="X">X (يبدأ اللعب)</option>
+                <option value="O">O</option>
+            </select>
+        </div>
+
+        <div style="color: gray; margin: 20px 0;">ضد</div>
+
+        <div class="input-group">
+            <label>اللاعب الثاني (اللون الأخضر)</label>
+            <input type="text" id="p2Name" placeholder="أدخل الاسم" maxlength="12">
+        </div>
+        
+        <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="startGame()">ابدأ التحدي</button>
     </div>
 
-    <div id="game" class="game-container hidden">
+    <div id="game-screen" class="game-container">
+        
         <div class="scoreboard">
-            <div><span id="nameDisplay1"></span>: <span id="score1">0</span></div>
-            <div><span id="nameDisplay2"></span>: <span id="score2">0</span></div>
+            <div id="card-p1" class="player-card">
+                <div class="p1-name-display" id="nameDisplay1">لاعب 1</div>
+                <div class="score-number" id="score1">0</div>
+                <div style="font-size: 1.2rem; color: #bdc3c7;">نقاط</div>
+            </div>
+
+            <div id="card-p2" class="player-card">
+                <div class="p2-name-display" id="nameDisplay2">لاعب 2</div>
+                <div class="score-number" id="score2">0</div>
+                <div style="font-size: 1.2rem; color: #bdc3c7;">نقاط</div>
+            </div>
         </div>
 
-        <div class="status" id="status">دور اللاعب: ...</div>
+        <div class="status-bar" id="status">جاري التحميل...</div>
 
-        <div class="board" id="board">
-            <div class="cell" data-index="0"></div>
-            <div class="cell" data-index="1"></div>
-            <div class="cell" data-index="2"></div>
-            <div class="cell" data-index="3"></div>
-            <div class="cell" data-index="4"></div>
-            <div class="cell" data-index="5"></div>
-            <div class="cell" data-index="6"></div>
-            <div class="cell" data-index="7"></div>
-            <div class="cell" data-index="8"></div>
+        <div class="board-wrapper">
+            <div id="winning-line"></div>
+            
+            <div class="board" id="board">
+                <div class="cell" data-index="0"></div>
+                <div class="cell" data-index="1"></div>
+                <div class="cell" data-index="2"></div>
+                <div class="cell" data-index="3"></div>
+                <div class="cell" data-index="4"></div>
+                <div class="cell" data-index="5"></div>
+                <div class="cell" data-index="6"></div>
+                <div class="cell" data-index="7"></div>
+                <div class="cell" data-index="8"></div>
+            </div>
         </div>
 
-        <br>
-        <button onclick="resetBoard()">جولة جديدة</button>
-        <button onclick="location.reload()" style="background-color: #e74c3c;">تغيير الأسماء</button>
+        <div class="controls">
+            <button class="btn btn-primary" onclick="resetBoard()">جولة جديدة</button>
+            <button class="btn btn-reset" onclick="location.reload()">إنهاء اللعبة تغيير الأسماء</button>
+        </div>
     </div>
+
+    <audio id="sound-click" src="https://actions.google.com/sounds/v1/cartoon/tap_on_synthetic_surface.ogg" preload="auto"></audio>
+    <audio id="sound-win" src="https://actions.google.com/sounds/v1/cartoon/conga_drum_hit_higher.ogg" preload="auto"></audio>
 
     <script>
         let players = {};
         let currentPlayer;
         let boardState = ["", "", "", "", "", "", "", "", ""];
         let gameActive = true;
+        let p1Starts = true; // لتبديل من يبدأ كل جولة
 
         const winningConditions = [
             [0, 1, 2], [3, 4, 5], [6, 7, 8], // صفوف
@@ -152,29 +331,61 @@
             [0, 4, 8], [2, 4, 6]             // أقطار
         ];
 
+        // عناصر الـ DOM
+        const statusDisplay = document.getElementById('status');
+        const winLine = document.getElementById('winning-line');
+        const cells = document.querySelectorAll('.cell');
+        const clickSound = document.getElementById('sound-click');
+        const winSound = document.getElementById('sound-win');
+
         function startGame() {
-            const n1 = document.getElementById('p1Name').value || "لاعب 1";
+            const n1 = document.getElementById('p1Name').value.trim() || "عملاق 1";
             const s1 = document.getElementById('p1Symbol').value;
-            const n2 = document.getElementById('p2Name').value || "لاعب 2";
+            const n2 = document.getElementById('p2Name').value.trim() || "عملاق 2";
             const s2 = (s1 === "X") ? "O" : "X";
 
             players = {
-                p1: { name: n1, symbol: s1, score: 0 },
-                p2: { name: n2, symbol: s2, score: 0 }
+                p1: { id: 1, name: n1, symbol: s1, score: 0, color: 'var(--color-x)', card: document.getElementById('card-p1') },
+                p2: { id: 2, name: n2, symbol: s2, score: 0, color: 'var(--color-o)', card: document.getElementById('card-p2') }
             };
 
-            currentPlayer = players.p1;
+            // الـ X يبدأ دائماً الجولة الأولى
+            currentPlayer = (players.p1.symbol === "X") ? players.p1 : players.p2;
 
             document.getElementById('nameDisplay1').innerText = players.p1.name + ` (${players.p1.symbol})`;
             document.getElementById('nameDisplay2').innerText = players.p2.name + ` (${players.p2.symbol})`;
             
-            document.getElementById('setup').classList.add('hidden');
-            document.getElementById('game').classList.remove('hidden');
-            updateStatus();
+            document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('game-screen').style.display = 'flex';
+            updateUI();
         }
 
-        function updateStatus() {
-            document.getElementById('status').innerText = `دور اللاعب: ${currentPlayer.name}`;
+        // تحديث واجهة المستخدم (الدور، التميز البصري)
+        function updateUI() {
+            // تحديث نص الحالة
+            statusDisplay.innerHTML = `دور اللاعب: <span style="color: ${currentPlayer.color}; font-weight:bold;">${currentPlayer.name}</span>`;
+            
+            // تحديث تظليل الكروت بناءً على الدور
+            players.p1.card.classList.remove('p1-turn', 'p2-turn');
+            players.p2.card.classList.remove('p1-turn', 'p2-turn');
+
+            if (gameActive) {
+                if (currentPlayer.id === 1) players.p1.card.classList.add('p1-turn');
+                else players.p2.card.classList.add('p2-turn');
+            }
+        }
+
+        // تحديث من هو المتصدر في النتيجة
+        function updateLeader() {
+            players.p1.card.classList.remove('leader');
+            players.p2.card.classList.remove('leader');
+
+            if (players.p1.score > players.p2.score) {
+                players.p1.card.classList.add('leader');
+            } else if (players.p2.score > players.p1.score) {
+                players.p2.card.classList.add('leader');
+            }
+            // في حال التعادل لا يظهر متصدر
         }
 
         function handleCellClick(e) {
@@ -183,15 +394,22 @@
 
             if (boardState[index] !== "" || !gameActive) return;
 
+            // تشغيل الصوت
+            clickSound.currentTime = 0;
+            clickSound.play().catch(()=>{}); // تجنب خطأ المتصفح إذا لم يتفاعل المستخدم أولاً
+
             boardState[index] = currentPlayer.symbol;
             cell.innerText = currentPlayer.symbol;
             cell.classList.add('taken');
+            cell.classList.add(currentPlayer.symbol === "X" ? 'x-filled' : 'o-filled');
 
             checkResult();
         }
 
         function checkResult() {
             let roundWon = false;
+            let winConditionIndices = null;
+
             for (let condition of winningConditions) {
                 let a = boardState[condition[0]];
                 let b = boardState[condition[1]];
@@ -199,45 +417,92 @@
                 if (a === '' || b === '' || c === '') continue;
                 if (a === b && b === c) {
                     roundWon = true;
+                    winConditionIndices = condition;
                     break;
                 }
             }
 
             if (roundWon) {
-                document.getElementById('status').innerHTML = `<span class="winner-msg">🎉 فاز ${currentPlayer.name}!</span>`;
-                currentPlayer.score++;
-                updateScores();
                 gameActive = false;
+                winSound.play().catch(()=>{});
+                statusDisplay.innerHTML = `🎉 احتفال! فاز <span style="color: ${currentPlayer.color}; font-weight:bold;">${currentPlayer.name}</span> بالجولة!`;
+                
+                currentPlayer.score++;
+                document.getElementById('score1').innerText = players.p1.score;
+                document.getElementById('score2').innerText = players.p2.score;
+                
+                drawWinningLine(winConditionIndices);
+                updateLeader();
+                
+                // إزالة تحديد الدور
+                players.p1.card.classList.remove('p1-turn');
+                players.p2.card.classList.remove('p2-turn');
                 return;
             }
 
             if (!boardState.includes("")) {
-                document.getElementById('status').innerText = "تعادل! 🤝";
+                statusDisplay.innerText = "تعادل الأقوياء! 🤝";
                 gameActive = false;
                 return;
             }
 
+            // تبديل الأدوار
             currentPlayer = (currentPlayer === players.p1) ? players.p2 : players.p1;
-            updateStatus();
+            updateUI();
         }
 
-        function updateScores() {
-            document.getElementById('score1').innerText = players.p1.score;
-            document.getElementById('score2').innerText = players.p2.score;
+        // رسم خط الفوز الاحترافي
+        function drawWinningLine(indices) {
+            const firstCell = cells[indices[0]];
+            const lastCell = cells[indices[2]];
+            const boardRect = document.getElementById('board').getBoundingClientRect();
+            const firstRect = firstCell.getBoundingClientRect();
+            const lastRect = lastCell.getBoundingClientRect();
+
+            // حساب النقطة المركزية للمربع الأول والأخير بالنسبة للوحة
+            const x1 = firstRect.left + firstRect.width / 2 - boardRect.left;
+            const y1 = firstRect.top + firstRect.height / 2 - boardRect.top;
+            const x2 = lastRect.left + lastRect.width / 2 - boardRect.left;
+            const y2 = lastRect.top + lastRect.height / 2 - boardRect.top;
+
+            // حساب الطول والزاوية
+            const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+            const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+
+            // تطبيق الستايل على الخط
+            winLine.style.width = distance + 'px';
+            winLine.style.height = '10px'; // سمك الخط
+            winLine.style.left = x1 + 'px';
+            winLine.style.top = (y1 - 5) + 'px'; // تعديل التمركز العمودي
+            winLine.style.transformOrigin = '0 50%'; // التدوير من البداية
+            winLine.style.transform = `rotate(${angle}deg)`;
+            winLine.style.display = 'block';
+            winLine.style.backgroundColor = currentPlayer.color; // لون الخط نفس لون الفائز
+            winLine.style.boxShadow = `0 0 20px ${currentPlayer.color}`;
         }
 
         function resetBoard() {
             boardState = ["", "", "", "", "", "", "", "", ""];
             gameActive = true;
-            currentPlayer = players.p1;
-            document.querySelectorAll('.cell').forEach(cell => {
+            winLine.style.display = 'none'; // إخفاء الخط
+
+            // تبديل من يبدأ الجولة الجديدة لإنصاف اللعب
+            p1Starts = !p1Starts;
+            // الـ X يبدأ دائماً، نحدد من يملك الـ X
+            const playerWithX = (players.p1.symbol === "X") ? players.p1 : players.p2;
+            const playerWithO = (players.p1.symbol === "O") ? players.p1 : players.p2;
+            
+            currentPlayer = p1Starts ? playerWithX : playerWithO;
+
+            cells.forEach(cell => {
                 cell.innerText = "";
-                cell.classList.remove('taken');
+                cell.classList.remove('taken', 'x-filled', 'o-filled');
             });
-            updateStatus();
+            updateUI();
         }
 
-        document.querySelectorAll('.cell').forEach(cell => cell.addEventListener('click', handleCellClick));
+        // إضافة مستمعي الأحداث للمربعات
+        cells.forEach(cell => cell.addEventListener('click', handleCellClick));
     </script>
 </body>
 </html>
