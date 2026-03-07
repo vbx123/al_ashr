@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة إكس أو المتطورة</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f39c12;
+            --bg-color: #2c3e50;
+            --text-color: #ecf0f1;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .setup-container, .game-container {
+            background: #34495e;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .hidden { display: none; }
+
+        input {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+            width: 80%;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        button:hover { background-color: #357abd; }
+
+        .scoreboard {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            background: #2c3e50;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            background-color: #ecf0f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+
+        .cell:hover { background-color: #bdc3c7; }
+        .cell.taken { cursor: not-allowed; }
+
+        .status { margin-top: 20px; font-size: 1.1rem; height: 1.5rem; }
+        
+        .winner-msg { color: var(--secondary-color); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>لعبة Tic-Tac-Toe 🎮</h1>
+
+    <div id="setup" class="setup-container">
+        <h3>إعداد اللاعبين</h3>
+        <input type="text" id="p1Name" placeholder="اسم اللاعب الأول">
+        <select id="p1Symbol" style="padding: 10px; border-radius: 5px;">
+            <option value="X">يختار X</option>
+            <option value="O">يختار O</option>
+        </select>
+        <br>
+        <input type="text" id="p2Name" placeholder="اسم اللاعب الثاني">
+        <p style="font-size: 0.8rem;">(اللاعب الثاني سيأخذ الرمز المتبقي تلقائياً)</p>
+        <button onclick="startGame()">ابدأ اللعب</button>
+    </div>
+
+    <div id="game" class="game-container hidden">
+        <div class="scoreboard">
+            <div><span id="nameDisplay1"></span>: <span id="score1">0</span></div>
+            <div><span id="nameDisplay2"></span>: <span id="score2">0</span></div>
+        </div>
+
+        <div class="status" id="status">دور اللاعب: ...</div>
+
+        <div class="board" id="board">
+            <div class="cell" data-index="0"></div>
+            <div class="cell" data-index="1"></div>
+            <div class="cell" data-index="2"></div>
+            <div class="cell" data-index="3"></div>
+            <div class="cell" data-index="4"></div>
+            <div class="cell" data-index="5"></div>
+            <div class="cell" data-index="6"></div>
+            <div class="cell" data-index="7"></div>
+            <div class="cell" data-index="8"></div>
+        </div>
+
+        <br>
+        <button onclick="resetBoard()">جولة جديدة</button>
+        <button onclick="location.reload()" style="background-color: #e74c3c;">تغيير الأسماء</button>
+    </div>
+
+    <script>
+        let players = {};
+        let currentPlayer;
+        let boardState = ["", "", "", "", "", "", "", "", ""];
+        let gameActive = true;
+
+        const winningConditions = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // صفوف
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // أعمدة
+            [0, 4, 8], [2, 4, 6]             // أقطار
+        ];
+
+        function startGame() {
+            const n1 = document.getElementById('p1Name').value || "لاعب 1";
+            const s1 = document.getElementById('p1Symbol').value;
+            const n2 = document.getElementById('p2Name').value || "لاعب 2";
+            const s2 = (s1 === "X") ? "O" : "X";
+
+            players = {
+                p1: { name: n1, symbol: s1, score: 0 },
+                p2: { name: n2, symbol: s2, score: 0 }
+            };
+
+            currentPlayer = players.p1;
+
+            document.getElementById('nameDisplay1').innerText = players.p1.name + ` (${players.p1.symbol})`;
+            document.getElementById('nameDisplay2').innerText = players.p2.name + ` (${players.p2.symbol})`;
+            
+            document.getElementById('setup').classList.add('hidden');
+            document.getElementById('game').classList.remove('hidden');
+            updateStatus();
+        }
+
+        function updateStatus() {
+            document.getElementById('status').innerText = `دور اللاعب: ${currentPlayer.name}`;
+        }
+
+        function handleCellClick(e) {
+            const cell = e.target;
+            const index = cell.getAttribute('data-index');
+
+            if (boardState[index] !== "" || !gameActive) return;
+
+            boardState[index] = currentPlayer.symbol;
+            cell.innerText = currentPlayer.symbol;
+            cell.classList.add('taken');
+
+            checkResult();
+        }
+
+        function checkResult() {
+            let roundWon = false;
+            for (let condition of winningConditions) {
+                let a = boardState[condition[0]];
+                let b = boardState[condition[1]];
+                let c = boardState[condition[2]];
+                if (a === '' || b === '' || c === '') continue;
+                if (a === b && b === c) {
+                    roundWon = true;
+                    break;
+                }
+            }
+
+            if (roundWon) {
+                document.getElementById('status').innerHTML = `<span class="winner-msg">🎉 فاز ${currentPlayer.name}!</span>`;
+                currentPlayer.score++;
+                updateScores();
+                gameActive = false;
+                return;
+            }
+
+            if (!boardState.includes("")) {
+                document.getElementById('status').innerText = "تعادل! 🤝";
+                gameActive = false;
+                return;
+            }
+
+            currentPlayer = (currentPlayer === players.p1) ? players.p2 : players.p1;
+            updateStatus();
+        }
+
+        function updateScores() {
+            document.getElementById('score1').innerText = players.p1.score;
+            document.getElementById('score2').innerText = players.p2.score;
+        }
+
+        function resetBoard() {
+            boardState = ["", "", "", "", "", "", "", "", ""];
+            gameActive = true;
+            currentPlayer = players.p1;
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.innerText = "";
+                cell.classList.remove('taken');
+            });
+            updateStatus();
+        }
+
+        document.querySelectorAll('.cell').forEach(cell => cell.addEventListener('click', handleCellClick));
+    </script>
+</body>
+</html>
