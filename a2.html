@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دعوة زفاف كونية فاخرة</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600;700&family=Montserrat:wght@200;400&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-deep: #05050a; /* أسود فضائي عميق */
+            --nebula-glow: rgba(29, 38, 113, 0.6); /* وهج السديم */
+            --gold-celestial: #f3cf7a; /* ذهبي نجمي مضيء */
+            --gold-dull: #b38f43; 
+            --text-pure: #ffffff;
+            --text-stardust: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-deep);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            perspective: 1200px;
+            /* توهج كوني ينبض في الخلفية */
+            background-image: radial-gradient(circle at center, #0e1630 0%, var(--bg-deep) 75%);
+        }
+
+        /* حاوية غبار النجوم والشهب المتساقطة */
+        #stardust-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .star-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background-color: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: stardust-fall linear infinite;
+        }
+
+        @keyframes stardust-fall {
+            0% { transform: translateY(-10px) translateX(0) scale(0.5); opacity: 0; }
+            20% { opacity: 0.8; }
+            80% { opacity: 0.8; }
+            100% { transform: translateY(105vh) translateX(50px) scale(1); opacity: 0; }
+        }
+
+        /* الحاوية الرئيسية للمسرح */
+        .universe-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 390px;
+            height: 640px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* البوابة السحرية الدوارة (بديل الجواب التقليدي) */
+        .celestial-portal {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+        }
+
+        /* الخاتم الفلكي المضيء والدوار */
+        .portal-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px dashed var(--gold-celestial);
+            border-radius: 50%;
+            box-shadow: 0 0 30px var(--nebula-glow), inset 0 0 20px rgba(243, 207, 122, 0.2);
+            animation: ring-rotate 20s linear infinite;
+        }
+
+        @keyframes ring-rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* زر النبض والتشغيل اللامع في المنتصف */
+        .portal-core {
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, #16224f 0%, #090d22 100%);
+            border: 1px solid var(--gold-celestial);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 12;
+            box-shadow: 0 0 25px rgba(243, 207, 122, 0.4);
+            animation: core-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes core-pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(243, 207, 122, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 0 35px rgba(243, 207, 122, 0.6); }
+        }
+
+        .portal-core span {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-celestial);
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        .portal-core small {
+            color: var(--text-stardust);
+            font-size: 0.7rem;
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+
+        /* حركة تلاشي البوابة ونزولها لأسفل الصفحة عند النقر */
+        .universe-wrapper.open .celestial-portal {
+            transform: translateY(260px) scale(0.5);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* كارت الدعوة الكوني الفاخر (اندفاع من العمق بدلاً من الصعود الورقي) */
+        .celestial-card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #0d1224 0%, #060812 100%);
+            border: 1px solid rgba(243, 207, 122, 0.3);
+            border-radius: 24px;
+            padding: 30px 20px;
+            z-index: 5;
+            opacity: 0;
+            /* محاذاة في العمق بفلتر زجاجي فاخر وبداية التكبير */
+            transform: scale(0.3) translateZ(-500px);
+            transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 30px 70px rgba(0,0,0,0.8), inset 0 0 40px rgba(243, 207, 122, 0.05);
+        }
+
+        /* تأثير الاندفاع السحري والظهور الكامل في مركز الشاشة */
+        .universe-wrapper.open .celestial-card {
+            transform: scale(1) translateZ(0);
+            opacity: 1;
+            z-index: 25;
+        }
+
+        /* الإطار السديمي الداخلي المتناسق جداً */
+        .card-inner-glow {
+            border: 1px solid rgba(243, 207, 122, 0.15);
+            height: 100%;
+            width: 100%;
+            padding: 25px 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* توزيع احترافي رياضي هندسي مريح */
+            align-items: center;
+            border-radius: 16px;
+            background: rgba(5, 5, 10, 0.4);
+        }
+
+        /* نصوص الكارت الفضائية الأنيقة والخالية من أي غلطة تنسيق */
+        .bismillah {
+            font-family: 'Amiri', serif;
+            font-size: 1.25rem;
+            color: var(--gold-celestial);
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+
+        .constellation-icon {
+            width: 40px;
+            height: 40px;
+            fill: none;
+            stroke: var(--gold-celestial);
+            stroke-width: 1;
+            opacity: 0.8;
+        }
+
+        .main-title {
+            font-family: 'Amiri', serif;
+            color: var(--text-pure);
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 0 0 15px rgba(255,255,255,0.2);
+        }
+
+        .invitation-text {
+            font-size: 0.9rem;
+            color: var(--text-stardust);
+            line-height: 1.6;
+            max-width: 88%;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        /* أسماء العرسان بخط كلاسيكي حاد وبارز */
+        .couple-names {
+            font-family: 'Amiri', serif;
+            font-size: 2.6rem;
+            font-weight: bold;
+            color: var(--gold-celestial);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.7);
+        }
+
+        .couple-names span {
+            font-size: 1.3rem;
+            color: var(--text-pure);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 200;
+        }
+
+        /* صندوق البيانات السفلي - هندسي ونظيف ومتباعد جداً لمنع أي تداخل */
+        .event-details {
+            border-top: 1px solid rgba(243, 207, 122, 0.2);
+            border-bottom: 1px solid rgba(243, 207, 122, 0.2);
+            padding: 15px 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* مساحات متساوية وآمنة للنظر */
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            color: var(--text-pure);
+        }
+
+        .detail-item svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--gold-celestial);
+            flex-shrink: 0;
+        }
+
+        .detail-item span strong {
+            color: var(--gold-celestial);
+            font-weight: 600;
+        }
+
+        /* عبارة ختامية فخمة مستقرة بنقاء في القاع */
+        .footer-note {
+            font-family: 'Amiri', serif;
+            font-size: 1.35rem;
+            color: var(--gold-dull);
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="wedding-audio" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="stardust-container"></div>
+
+    <div class="universe-wrapper" id="main-container">
+        
+        <div class="celestial-portal" onclick="triggerCelestialActivation()">
+            <div class="portal-ring"></div>
+            <div class="portal-core">
+                <span>A & S</span>
+                <small>انقر لفتح البوابة</small>
+            </div>
+        </div>
+
+        <div class="celestial-card">
+            <div class="card-inner-glow">
+                
+                <p class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+                
+                <svg class="constellation-icon" viewBox="0 0 24 24">
+                    <path d="M12 2L2 22h20L12 2zm0 4l6 12H6l6-12z"/>
+                    <circle cx="12" cy="11" r="1" fill="currentColor"/>
+                </svg>
+                
+                <h1 class="main-title">دعوة زفاف كونية</h1>
+                
+                <p class="invitation-text">في ليلة نسجت خيوطها من ضياء النجوم، يسعدنا دعوتكم لتشهدوا عقد قران بهجة قلوبنا..</p>
+                
+                <div class="couple-names">
+                    أحمد
+                    <span>&</span>
+                    سارة
+                </div>
+
+                <p class="invitation-text">تكتمل كواكب مسرتنا بوجودكم يداً بيد معنا</p>
+
+                <div class="event-details">
+                    <div class="detail-item">
+                        <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+                        <span><strong>اليوم:</strong> الخميس، 15 أكتوبر 2026</span>
+                    </div>
+                    <div class="detail-item">
+                        <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                        <span><strong>الساعة:</strong> الثامنة مساءً</span>
+                    </div>
+                    <div class="detail-item">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        <span><strong>المكان:</strong> قاعة الفخامة الملكية - وسط المدينة</span>
+                    </div>
+                </div>
+
+                <p class="footer-note">جعل الله دياركم تفيض بالبهجة والأفراح ✨</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function triggerCelestialActivation() {
+            const container = document.getElementById('main-container');
+            const audio = document.getElementById('wedding-audio');
+            
+            if (!container.classList.contains('open')) {
+                container.classList.add('open');
+                
+                // تشغيل الأغنية المكررة فوراً
+                audio.play().catch(err => {
+                    console.log("المتصفح يطلب تفاعل يدوي لتشغيل الصوت أولاً:", err);
+                });
+
+                // إطلاق تأثير غبار النجوم اللامع والسريع
+                launchCelestialStardust();
+            }
+        }
+
+        function launchCelestialStardust() {
+            const container = document.getElementById('stardust-container');
+            const totalStars = 45; // عدد ممتاز يحافظ على طيران وسرعة الحركة 60fps
+
+            for (let i = 0; i < totalStars; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star-particle');
+                
+                const size = Math.random() * 3 + 2;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}vw`;
+                
+                const speed = Math.random() * 1.5 + 2.5;
+                star.style.animationDuration = `${speed}s`;
+                
+                const delay = Math.random() * 3;
+                star.style.animationDelay = `${delay}s`;
+                
+                // ألوان طيفية نجمية (أبيض ناصع، ذهبي مشع، أزرق ثلجي خفيف)
+                const starColors = ['#ffffff', '#fff3d1', '#e0f2fe', '#fef08a'];
+                star.style.backgroundColor = starColors[Math.floor(Math.random() * starColors.length)];
+                
+                // إضافة وميض خفيف للشهب
+                if(Math.random() > 0.5) {
+                    star.style.boxShadow = `0 0 10px ${star.style.backgroundColor}`;
+                }
+
+                container.appendChild(star);
+            }
+        }
+    </script>
+</body>
+</html>

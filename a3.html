@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دعوة زفاف ملكية فاخرة</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@500;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #090e17; 
+            --velvet-card: #111a2e; 
+            --gold-bright: #f5e4a3; 
+            --gold-foil: #d4af37; 
+            --gold-dark: #aa7c11; 
+            --text-light: #ffffff;
+            --text-muted: #abb5c2;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at center, #14203a 0%, var(--bg-dark) 80%);
+            padding: 20px 10px;
+        }
+
+        /* حاوية مطر الذهب الخفيف السريع */
+        #gold-rain-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .gold-piece {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #d4af37;
+            opacity: 0;
+            pointer-events: none;
+            animation: confetti-fall linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+            15% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* الحاوية الهيكلية الثابتة المرنة */
+        .wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 380px;
+            min-height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* حاوية حركة الظرف */
+        .gate-envelope {
+            position: relative;
+            width: 100%;
+            min-height: 280px;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* حركة نبض خفيفة للظرف في البداية */
+        .gate-envelope.not-opened {
+            animation: royal-pulse 3s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        @keyframes royal-pulse {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* البوابات المنزلقة */
+        .gate-left, .gate-right {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            background: linear-gradient(135deg, #15223d, #0d1626);
+            border: 1px solid var(--gold-dark);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+            z-index: 12;
+        }
+
+        .gate-left { left: 0; border-radius: 12px 0 0 12px; }
+        .gate-right { right: 0; border-radius: 0 12px 12px 0; }
+
+        /* حركة انزلاق البوابات للخارج */
+        .gate-envelope.open .gate-left { transform: translateX(-100%); opacity: 0; }
+        .gate-envelope.open .gate-right { transform: translateX(100%); opacity: 0; }
+
+        /* الختم الملكي */
+        .royal-seal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #ffd700, var(--gold-dark));
+            border: 2px solid var(--gold-bright);
+            border-radius: 50%;
+            z-index: 15;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            color: #000000;
+            font-weight: bold;
+            transition: transform 0.4s ease, opacity 0.3s ease;
+        }
+
+        .gate-envelope.open .royal-seal {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0);
+        }
+
+        /* كارت الدعوة الملكي الفاخر والمحسن */
+        .royal-card {
+            position: absolute;
+            width: 100%;
+            background-color: var(--velvet-card);
+            border: 2px solid var(--gold-foil);
+            border-radius: 16px;
+            padding: 10px;
+            z-index: 5;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: transform 0.9s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
+            text-align: center;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        /* ظهور واستقرار الكارت بوضوح واحترافية */
+        .gate-envelope.open .royal-card {
+            position: relative;
+            transform: scale(1);
+            opacity: 1;
+            z-index: 25;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        }
+
+        /* الإطار الداخلي للكارت */
+        .card-frame {
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            width: 100%;
+            padding: 25px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px; /* مسافات متناسقة بين العناصر */
+            position: relative;
+            border-radius: 10px;
+        }
+
+        /* زوايا الكارت الفخمة */
+        .corner-piece {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-color: var(--gold-foil);
+            border-style: solid;
+            opacity: 0.6;
+        }
+        .top-right { top: 6px; right: 6px; border-width: 1.5px 1.5px 0 0; }
+        .top-left { top: 6px; left: 6px; border-width: 1.5px 0 0 1.5px; }
+        .bottom-right { bottom: 6px; right: 6px; border-width: 0 1.5px 1.5px 0; }
+        .bottom-left { bottom: 6px; left: 6px; border-width: 0 0 1.5px 1.5px; }
+
+        /* تنسيقات النصوص الملكية الاحترافية المصغرة سيكا */
+        .bismillah {
+            font-family: 'Amiri', serif;
+            font-size: 1.15rem;
+            color: var(--gold-bright);
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .monogram {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            color: var(--gold-foil);
+            border: 1px solid var(--gold-foil);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.15);
+        }
+
+        .main-title {
+            font-family: 'Amiri', serif;
+            color: var(--gold-bright);
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .invitation-text {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.5;
+            max-width: 92%;
+            opacity: 0.85;
+        }
+
+        /* أسماء العرسان الفخمة */
+        .couple-names {
+            font-family: 'Amiri', serif;
+            font-size: 2.1rem;
+            font-weight: 700;
+            color: var(--gold-foil);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            margin: 5px 0;
+        }
+
+        .couple-names span {
+            font-size: 1.2rem;
+            color: var(--gold-bright);
+        }
+
+        /* تنسيق صندوق التفاصيل ومنع أي تداخل */
+        .event-details {
+            border-top: 1px double rgba(212, 175, 55, 0.3);
+            border-bottom: 1px double rgba(212, 175, 55, 0.3);
+            padding: 12px 5px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px; 
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            text-align: right;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: var(--text-light);
+            width: 100%;
+            max-width: 290px;
+            margin: 0 auto;
+        }
+
+        .detail-item svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--gold-foil);
+            flex-shrink: 0;
+        }
+
+        .detail-item strong {
+            color: var(--gold-bright);
+            font-weight: 600;
+            margin-left: 2px;
+        }
+
+        /* العبارة الختامية الأنيقة */
+        .footer-note {
+            font-family: 'Amiri', serif;
+            font-size: 1.15rem;
+            color: var(--gold-foil);
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="wedding-audio" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="gold-rain-container"></div>
+
+    <div class="wrapper">
+        <div class="gate-envelope not-opened" id="main-container" onclick="openRoyalInvitation()">
+            
+            <div class="gate-left"></div>
+            <div class="gate-right"></div>
+            
+            <div class="royal-seal">A&S</div>
+
+            <div class="royal-card">
+                <div class="card-frame">
+                    <div class="corner-piece top-right"></div>
+                    <div class="corner-piece top-left"></div>
+                    <div class="corner-piece bottom-right"></div>
+                    <div class="corner-piece bottom-left"></div>
+
+                    <p class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+                    
+                    <div class="monogram">AS</div>
+                    
+                    <h1 class="main-title">دعوة زفاف ملكية</h1>
+                    
+                    <p class="invitation-text">يتشرف رفقاء الدرب بدعوتكم لمشاركتنا فرحة العمر والليلة الفاخرة لزفاف..</p>
+                    
+                    <div class="couple-names">
+                        أحمد
+                        <span>&</span>
+                        سارة
+                    </div>
+
+                    <p class="invitation-text">حضوركم يكلل ليلتنا بالمسرة والبهجة الفاخرة</p>
+
+                    <div class="event-details">
+                        <div class="detail-item">
+                            <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+                            <span><strong>اليوم:</strong> الخميس، 15 أكتوبر 2026</span>
+                        </div>
+                        <div class="detail-item">
+                            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                            <span><strong>الساعة:</strong> الثامنة مساءً</span>
+                        </div>
+                        <div class="detail-item">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                            <span><strong>المكان:</strong> قاعة الفخامة الملكية - وسط المدينة</span>
+                        </div>
+                    </div>
+
+                    <div class="footer-note">ودامت دياركم عامرة بالأفراح والمسرات ✨</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function openRoyalInvitation() {
+            const container = document.getElementById('main-container');
+            const audio = document.getElementById('wedding-audio');
+            
+            if (container.classList.contains('not-opened')) {
+                container.classList.remove('not-opened');
+                container.classList.add('open');
+                
+                audio.play().catch(err => {
+                    console.log("تم حجب التشغيل مؤقتاً بانتظار إذن المتصفح:", err);
+                });
+
+                launchGoldRain();
+            }
+        }
+
+        function launchGoldRain() {
+            const container = document.getElementById('gold-rain-container');
+            const totalPieces = 35;
+
+            for (let i = 0; i < totalPieces; i++) {
+                const piece = document.createElement('div');
+                piece.classList.add('gold-piece');
+                
+                const size = Math.random() * 5 + 5;
+                piece.style.width = `${size}px`;
+                piece.style.height = `${size}px`;
+                piece.style.left = `${Math.random() * 100}vw`; 
+                
+                const speed = Math.random() * 2 + 3; 
+                piece.style.animationDuration = `${speed}s`;
+                
+                const delay = Math.random() * 4; 
+                piece.style.animationDelay = `${delay}s`;
+                
+                const goldGradients = ['#ffd700', '#d4af37', '#f5e4a3'];
+                piece.style.backgroundColor = goldGradients[Math.floor(Math.random() * goldGradients.length)];
+
+                container.appendChild(piece);
+            }
+        }
+    </script>
+</body>
+</html>

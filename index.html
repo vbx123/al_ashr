@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>معاينة دعوات الزفاف الرقمية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* إعدادات الخلفية العامة والخطوط */
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: radial-gradient(circle at center, #1a1525 0%, #0a0712 100%);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-x: hidden;
+        }
+
+        /* حاوية العرض الرئيسية */
+        .container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* عنوان الصفحة الرئيسي العلوي بتأثير النيون */
+        .header-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 50px;
+            background: linear-gradient(45deg, #ff758c, #ff7eb3, #868efc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 117, 140, 0.3);
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        /* شبكة عرض الكروت (Grid System) */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 10px;
+        }
+
+        /* التصميم الخرافي للكارت (Section Card) */
+        .section-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 30px 25px;
+            text-decoration: none;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        /* تأثير التوهج الخلفي عند الـ Hover */
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 117, 140, 0.15), rgba(134, 142, 252, 0.15));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 1;
+        }
+
+        /* حركة الكارت عند مرور الفأرة */
+        .section-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 117, 140, 0.4);
+            box-shadow: 0 20px 40px rgba(255, 117, 140, 0.15), 0 0 25px rgba(134, 142, 252, 0.1);
+        }
+
+        .section-card:hover::before {
+            opacity: 1;
+        }
+
+        /* محتويات الكارت داخل زاوية آمنة فوق الخلفية المتحركة */
+        .card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* عناوين الكروت */
+        .section-card h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+            color: #ffffff;
+            transition: color 0.3s ease;
+        }
+
+        .section-card:hover h2 {
+            color: #ff7eb3;
+        }
+
+        /* نصوص الوصف داخل الكروت */
+        .section-card p {
+            font-size: 0.95rem;
+            color: #b0a9be;
+            line-height: 1.7;
+            margin: 0 0 20px 0;
+            font-weight: 300;
+        }
+
+        /* مؤشر الملف البرمجي أسفل الكارت */
+        .file-badge {
+            display: inline-flex;
+            align-items: center;
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            color: #868efc;
+            font-family: monospace;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .section-card:hover .file-badge {
+            background: rgba(134, 142, 252, 0.2);
+            color: #ffffff;
+            border-color: rgba(134, 142, 252, 0.3);
+        }
+
+        /* تذييل الصفحة الفخم */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 0.9rem;
+            color: #615a75;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            background: rgba(10, 7, 18, 0.8);
+            backdrop-filter: blur(5px);
+            font-weight: 400;
+        }
+
+        /* أنيميشن دخول ناعم للعناصر */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* توافق الشاشات الصغيرة (الهواتف) */
+        @media (max-width: 768px) {
+            .header-title { font-size: 1.9rem; margin-bottom: 35px; }
+            .container { margin: 30px auto; }
+            .section-card { padding: 22px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="header-title">معرض معاينة تصاميم الزفاف الفاخرة</h1>
+
+        <div class="grid-container">
+
+            <a href="a1.html" class="section-card">
+                <div class="card-content">
+                    <h2>دعوة فرح عادية</h2>
+                    <p>نسخة كلاسيكية مريحة تجمع بين البساطة والأناقة المعهودة في تصاميم بطاقات الدعوة.</p>
+                </div>
+                <div class="file-badge">a1.html</div>
+            </a>
+
+            <a href="a2.html" class="section-card">
+                <div class="card-content">
+                    <h2>دعوة فرح كونية</h2>
+                    <p>أبعاد ساحرة وخلفيات مستوحاة من عمق الفضاء والنجوم المتلألئة لتجربة فريدة.</p>
+                </div>
+                <div class="file-badge">a2.html</div>
+            </a>
+
+            <a href="a3.html" class="section-card">
+                <div class="card-content">
+                    <h2>دعوة فرح ملكية</h2>
+                    <p>تصميم يتميز بالفخامة والزخارف الذهبية الراقية المخصصة للمناسبات الكبرى.</p>
+                </div>
+                <div class="file-badge">a3.html</div>
+            </a>
+
+            <a href="a4.html" class="section-card">
+                <div class="card-content">
+                    <h2>دعوة زفاف ملكية برو</h2>
+                    <p>نسخة تفاعلية متقدمة [a4]، تتميز بخلفيات حية ومتحركة مع ميزة التحكم الذكي في تشغيل وإيقاف الموسيقى الخلفية.</p>
+                </div>
+                <div class="file-badge">a4.html</div>
+            </a>
+
+        </div>
+    </div>
+
+    <div class="footer">
+        جميع الحقوق محفوظة © 2026
+    </div>
+
+</body>
+</html>
