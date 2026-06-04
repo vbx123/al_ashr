@@ -1,4 +1,4 @@
-8Enter<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -114,6 +114,8 @@
             text-align: center;
             margin-bottom: 40px;
             margin-top: 20px;
+            width: 100%;
+            max-width: 500px;
         }
 
         .profile-container {
@@ -134,12 +136,66 @@
         }
 
         .birthday-title {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             font-weight: 900;
             background: linear-gradient(45deg, #ffe600, #ff477e, #ff85a2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+            white-space: nowrap; /* تضمن بقاء النص في سطر واحد */
+        }
+
+        /* الاسم والتفاصيل المضافة بتنسيق احترافي */
+        .birthday-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
             margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(255, 71, 126, 0.4);
+        }
+
+        .birthday-date {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 6px 15px;
+            border-radius: 30px;
+            display: inline-flex;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .birthday-prayer {
+            font-size: 1rem;
+            color: #e0e0e0;
+            line-height: 1.6;
+            background: rgba(255, 71, 126, 0.08);
+            border-right: 4px solid var(--primary-color);
+            padding: 12px 15px;
+            border-radius: 4px 12px 12px 4px;
+            margin: 15px auto 0;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        /* تعديل الخط للشاشات الصغيرة لضمان سطر واحد */
+        @media (max-width: 480px) {
+            .birthday-title {
+                font-size: 1.9rem; 
+            }
+            .birthday-name {
+                font-size: 1.5rem;
+            }
+            .birthday-date {
+                font-size: 0.95rem;
+            }
+            .birthday-prayer {
+                font-size: 0.9rem;
+            }
         }
 
         /* حاويات الأقسام التفاعلية */
@@ -303,30 +359,27 @@
 
     <audio id="bg-music" src="https://files.catbox.moe/vmj9oh.mp3" loop></audio>
 
-    <!-- 1. صفحة المفاجأة -->
     <div id="intro-overlay">
         <div class="pulse-element">🎁</div>
         <button class="intro-btn" onclick="startCelebration()">إفتح المفاجأة ✨</button>
     </div>
 
-    <!-- 2. محتوى الصفحة الرئيسي -->
     <main id="main-content">
-        <!-- زر صوت علوي صغير -->
         <button class="audio-control" onclick="toggleAudio()">
             <span id="audio-icon">🔊</span>
             <span id="audio-text">صوت</span>
         </button>
 
-        <!-- الهيدر والصورة -->
         <div class="header-section">
             <div class="profile-container">
                 <img class="profile-img" src="https://files.catbox.moe/ltnxft.jpg" alt="عيد ميلادي">
             </div>
-            <h1 class="birthday-title">اليوم عيد ميلادي🎉</h1>
-            <p style="color: #bbb;"></p>
+            <h1 class="birthday-title">اليوم عيد ميلادي 🎉</h1>
+            <div class="birthday-name">أجمل بنوتة ✨</div>
+            <div class="birthday-date">📅 4 يونيو</div>
+            <div class="birthday-prayer">🤲 اللهم اجعلها سنة خير وبركة، وحقق لي فيها ما أتمنى، واكتب لي السعادة والتوفيق في كل خطوة من حياتي. ❤️</div>
         </div>
 
-        <!-- ألبوم الصور التفاعلي -->
         <section class="section-container">
             <h2 class="section-title">📸 ألبوم ذكرياتي الكاجوال</h2>
             <div class="slider-wrapper">
@@ -339,7 +392,6 @@
             </div>
         </section>
 
-        <!-- صندوق التهاني والتعليقات المربوط بجوجل فورم -->
         <section class="section-container">
             <h2 class="section-title">✍️ دفتر تهاني الأصدقاء</h2>
             
@@ -350,8 +402,7 @@
             </form>
 
             <div class="comments-list" id="comments-box">
-                <!-- ستظهر التعليقات هنا ديناميكياً من ملف الإكسل -->
-            </div>
+                </div>
         </section>
     </main>
 
@@ -500,4 +551,4 @@
         window.addEventListener('DOMContentLoaded', loadCommentsFromSheet);
     </script>
 </body>
-</html>
+    </html>
